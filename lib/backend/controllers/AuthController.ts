@@ -20,7 +20,7 @@ export class AuthController {
         );
       }
 
-      // FIX: Wrapped arguments in a single object to match the "Expected 1 argument" error
+      // FIX 1: Passed as object
       await this.authService.register({
         name: body.name,
         email: body.email,
@@ -50,7 +50,11 @@ export class AuthController {
         );
       }
 
-      const token = await this.authService.login(body.email, body.password);
+      // FIX 2: Wrapped arguments in a single object here as well
+      const token = await this.authService.login({
+        email: body.email, 
+        password: body.password
+      });
       
       // Create response with success message
       const response = NextResponse.json(
