@@ -20,7 +20,6 @@ export class AuthController {
         );
       }
 
-      // FIX 1: Passed as object
       await this.authService.register({
         name: body.name,
         email: body.email,
@@ -50,8 +49,9 @@ export class AuthController {
         );
       }
 
-      // FIX 2: Wrapped arguments in a single object here as well
-      const token = await this.authService.login({
+      // FIX: Destructure 'token' from the returned object
+      // The service returns { user: ..., token: ... }, so we grab just the token string.
+      const { token } = await this.authService.login({
         email: body.email, 
         password: body.password
       });
@@ -63,6 +63,7 @@ export class AuthController {
       );
       
       // Set the JWT as an HTTP-Only cookie
+      // Now 'token' is strictly a string, which satisfies the type requirement
       response.cookies.set('token', token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
