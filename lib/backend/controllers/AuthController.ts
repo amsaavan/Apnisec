@@ -20,7 +20,12 @@ export class AuthController {
         );
       }
 
-      await this.authService.register(body.name, body.email, body.password);
+      // FIX: Wrapped arguments in a single object to match the "Expected 1 argument" error
+      await this.authService.register({
+        name: body.name,
+        email: body.email,
+        password: body.password
+      });
       
       return NextResponse.json(
         { message: "User registered successfully" }, 
