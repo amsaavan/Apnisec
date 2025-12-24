@@ -1,0 +1,35 @@
+// prisma/schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite" // Changing to sqlite for instant local setup
+  url      = "file:./dev.db"
+}
+
+// 1. User Model
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String
+  name      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  issues    Issue[]
+}
+
+// 2. Issue Model (For the Dashboard)
+model Issue {
+  id          String   @id @default(uuid())
+  title       String
+  description String
+  type        String   // "Cloud Security", "VAPT", etc.
+  priority    String?  // "High", "Medium", "Low"
+  status      String   @default("Open")
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
